@@ -1,8 +1,9 @@
 const router = require('express').Router()
 const userController = require('../controllers/user.controller')
+const joiMiddleware = require("../middlewares/joiValidator")
 
 // register tweet
-router.post('/register', userController.registerUser)
+router.post('/register', joiMiddleware, userController.registerUser)
 
 // findall
 router.get('/users', userController.findAll)
