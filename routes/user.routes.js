@@ -1,10 +1,8 @@
-const express = require('express')
-const router = express.Router()
-
+const router = require('express').Router()
 const userController = require('../controllers/user.controller')
 
-// create user
-router.post('/create', userController.createUser)
+// register tweet
+router.post('/register', userController.registerUser)
 
 // findall
 router.get('/users', userController.findAll)
@@ -16,6 +14,6 @@ router.get('/:id', userController.findOne)
 router.put('/:id', userController.update)
 
 // delete
-router.delete('/delete/:id', userController.delete)
+router.delete('/delete/:id', userController.destroy)
 
 module.exports = router

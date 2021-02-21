@@ -1,38 +1,40 @@
-const bcrypt = require("bcryptjs")
+const bcrypt = require('bcryptjs');
 
-module.exports = (sequelize,Sequelize)=>{
-    const user = sequelize.define("users",  {
-        firstName : {
+module.exports = (sequelize, Sequelize) =>{
+    const user = sequelize.define("users",{
+        firstname : {
             type : Sequelize.STRING,
-            allowNull  : false       
+            allowNull : false,
         },
-        
-        lastName : {
+
+        lastname : {
             type : Sequelize.STRING,
-            allowNull  : false       
+            allowNull : false,
         },
 
         username : {
             type : Sequelize.STRING,
-            allowNull  : false,
-            unique : true   
+            allowNull : false,
+            unique : true,
         },
 
         password : {
             type : Sequelize.STRING,
-            allowNull  : false,
+            allowNull : false,
 
             set(value){
-                this.setDataValue("password", bcrypt.hashSync(value))
+                this.setDataValue('password', bcrypt.hashSync(value))
             }
         }
-    },{});
+    },{
+    })
 
-    user.prototype.toJSON = function () {
-        var values = Object.assign({}, this.get());
+    user.prototype.toJSON = function(){
+        var values = Object.assign({}, this.get())
 
-        delete values.password;
-        return values;
+        delete values.password
+        return values
     }
-    return user;
+
+    return user
 }

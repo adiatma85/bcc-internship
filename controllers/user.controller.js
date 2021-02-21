@@ -1,13 +1,26 @@
 const db = require("../models");
 const User = db.users;
+const _ = require('lodash');
 
 // create User
-function createUser(req, res, next) {
+function registerUser(req, res, next) {
   User.create(req.body)
     .then((data) => {
-      res.send(data);
+      res.status(200).send(data);
     })
     .catch((err) => {
+      if(err.name == 'SequelizeUniqueConstraintError'){
+        const failResponse = {
+            success : 'false',
+            error : {
+                details : _.map(err.errors,({message , type})=>({
+                    message,
+                    type
+                }))
+            }
+        }
+        return res.status(422).send(failResponse)
+      }
       res.status(500).send({
         message: "Error in create User",
       });
@@ -16,15 +29,14 @@ function createUser(req, res, next) {
 
 // findAll
 function findAll(req, res, next) {
-  User.findAll()
-    .then((data) => {
-      res.send(data);
+    User.findAll().then(users =>{
+        res.status(200).send({users})
     })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Error in findAll",
-      });
-    });
+    .catch(err => {
+        res.status(500).send({
+            message : "Error to findAll"
+        })
+    })
 }
 
 // findOne
@@ -32,6 +44,11 @@ function findOne(req, res, next) {
   const id = req.params.id;
   User.findByPk(id)
     .then((data) => {
+        if(data == null){
+            res.status(500).send({
+                message: "Error in findOne",
+            });
+          }
       res.send(data);
     })
     .catch((err) => {
@@ -67,7 +84,7 @@ function update(req, res, next) {
 }
 
 // delete
-function _delete(req, res, next) {
+function destroy(req, res, next) {
   const id = req.params.id;
   let condition = {
     id: id,
@@ -94,9 +111,9 @@ function _delete(req, res, next) {
 }
 
 module.exports = {
-  createUser,
+  registerUser,
   findAll,
   findOne,
   update,
-  delete: _delete,
+  destroy,
 };

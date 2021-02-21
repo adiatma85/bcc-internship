@@ -13,17 +13,17 @@ const sequelize = new Sequelize(env.DB_NAME, env.DB_USER, env.DB_PASS, {
     }   
 })
 
-const users = require("./user.model")(sequelize, Sequelize)
 const tweets = require("./tweet.model")(sequelize, Sequelize)
+const users = require("./user.model")(sequelize, Sequelize)
 
-//make relationship between tweets
-users.hasMany(tweets, { as: "tweets" });
-tweets.belongsTo(users, { foreignKey: 'userId', as: 'user' })
+users.hasMany(tweets, {as:"tweets", onDelete : "cascade", onUpdate : "cascade"})
+tweets.belongsTo(users, {foreignKey : "userId", as : "user"})
 
 module.exports = {
     Sequelize,
     sequelize,
+
     // defining models
     tweets,
-    users
+    users,
 }
