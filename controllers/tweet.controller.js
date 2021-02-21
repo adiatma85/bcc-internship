@@ -8,9 +8,7 @@ function createTweet(req, res, next) {
       res.send(data);
     })
     .catch((err) => {
-      res.status(500).send({
-        message: "Error in create tweet",
-      });
+      return next(err)
     });
 }
 
@@ -21,9 +19,7 @@ function findAll(req, res, next) {
       res.send(data);
     })
     .catch((err) => {
-      res.status(500).send({
-        message: "Error in findAll",
-      });
+      return next(err)
     });
 }
 
@@ -35,9 +31,7 @@ function findOne(req, res, next) {
       res.send(data);
     })
     .catch((err) => {
-      res.status(500).send({
-        message: "Error in findOne",
-      });
+      return next(err)
     });
 }
 
@@ -50,9 +44,7 @@ function update(req, res, next) {
   Tweet.update(req.body, { where: condition })
     .then((num) => {
       if (num != 1) {
-        res.status(500).send({
-          message: "Affected row not one",
-        });
+        return next(err)
       }
       res.status(200).send({
           success: true,
@@ -60,9 +52,7 @@ function update(req, res, next) {
       });
     })
     .catch((err) => {
-      res.status(500).send({
-        message: "Error in update tweet",
-      });
+      return next(err)
     });
 }
 
@@ -78,18 +68,14 @@ function _delete(req, res, next) {
   })
     .then((num) => {
       if (num != 1) {
-        res.status(500).send({
-          message: "Affected row not one",
-        });
+        return next(err)
       }
       res.status(200).send({
         message: "Delete successful",
       });
     })
     .catch((err) => {
-      res.status(500).send({
-        message: "Error in delete tweet",
-      });
+      return next(err)
     });
 }
 

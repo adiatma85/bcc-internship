@@ -2,7 +2,8 @@ require('dotenv').config()
 const express = require('express')
 const app = express();
 const db = require('./models')
-const bodyParser = require('body-parser')
+// const bodyParser = require('body-parser')
+const errorHandler = require("./utils/errorHandler")
 
 db.sequelize.sync({ });
 
@@ -17,6 +18,8 @@ app.use(express.urlencoded( { extended: false}))
 // defining route
 app.use('/tweet', tweetRoute)
 app.use('/user', userRoute)
+
+app.use(errorHandler)
 
 app.use('/', (req, res) => {
     res.send({

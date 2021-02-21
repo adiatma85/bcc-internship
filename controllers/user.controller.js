@@ -21,11 +21,11 @@ function registerUser(req, res, next) {
         }
         return res.status(422).send(failResponse)
       }
-      res.status(500).send({
-        message: "Error in create User",
-      });
+      return next(err)
     });
 }
+
+
 
 // findAll
 function findAll(req, res, next) {
@@ -33,9 +33,7 @@ function findAll(req, res, next) {
         res.status(200).send({users})
     })
     .catch(err => {
-        res.status(500).send({
-            message : "Error to findAll"
-        })
+        return next(err)
     })
 }
 
@@ -45,16 +43,12 @@ function findOne(req, res, next) {
   User.findByPk(id)
     .then((data) => {
         if(data == null){
-            res.status(500).send({
-                message: "Error in findOne",
-            });
+            next("User with id is not found")
           }
       res.send(data);
     })
     .catch((err) => {
-      res.status(500).send({
-        message: "Error in findOne",
-      });
+      return next(err)
     });
 }
 
@@ -67,9 +61,7 @@ function update(req, res, next) {
   User.update(req.body, { where: condition })
     .then((num) => {
       if (num != 1) {
-        res.status(500).send({
-          message: "Affected row not one",
-        });
+        return next(err)
       }
       res.status(200).send({
           success: true,
@@ -77,9 +69,7 @@ function update(req, res, next) {
       });
     })
     .catch((err) => {
-      res.status(500).send({
-        message: "Error in update User",
-      });
+      return next(err)
     });
 }
 
@@ -95,18 +85,14 @@ function destroy(req, res, next) {
   })
     .then((num) => {
       if (num != 1) {
-        res.status(500).send({
-          message: "Affected row not one",
-        });
+        return next(err)
       }
       res.status(200).send({
         message: "Delete successful",
       });
     })
     .catch((err) => {
-      res.status(500).send({
-        message: "Error in delete User",
-      });
+      return next(err)
     });
 }
 
